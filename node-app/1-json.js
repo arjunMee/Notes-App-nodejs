@@ -3,11 +3,10 @@ const chalk = require('chalk')
 
 const addNote = (title, body) => {
   const data = loadData()
-  const duplicate = data.filter((single) => {
-    return single.title === title
-  })
-
-  if (duplicate.length === 0) {
+  // const duplicates = data.filter((single) => single.title === title)
+  const duplicate = data.find((single) => single.title === title)
+debugger
+  if (!duplicate) {
     data.push({
       title: title,
       body: body,
@@ -47,29 +46,29 @@ const removeNote = (note) => {
   saveData(updatedData)
 }
 
-module.exports = { addNote: addNote, removeNote: removeNote }
+const listNote = () => {
+  const data = loadData()
+  console.log(chalk.inverse('your notes'))
+  data.forEach((single, index) =>
+    console.log(`the ${index + 1} title is ${single.title} `)
+  )
+}
 
-// const fs = require('fs')
-// // const book = {
-// //   title: 'Ego is Emney',
-// //   author: 'arjun meena',
-// //   age: 32,
-// // }
+const readNote = (title) => {
+  const data = loadData()
+  const filterData = data.find((note) => note.title === title)
 
-// // const bookJSON = JSON.stringify(book)
-// // console.log(bookJSON)
+  if (filterData) {
+    console.log(chalk.green.inverse('found'))
+    console.log(`the title ${filterData.title} and body is ${filterData.body}`)
+  } else {
+    console.log(chalk.red.inverse('notfound'))
+  }
+}
 
-// // fs.writeFileSync('1-json.json', bookJSON)
-
-// // const dataBuffer = fs.readFileSync('1-json.json')
-// // console.log(JSON.parse(dataBuffer))
-
-// const mainFile = fs.readFileSync('1-json.json')
-// const stringFormate = mainFile.toString()
-// const mainData = JSON.parse(stringFormate)
-// mainData.name = 'arjun'
-// mainData.age = 34
-
-// const updatefile = JSON.stringify(mainData)
-
-// fs.writeFileSync('1-json.json', updatefile)
+module.exports = {
+  addNote: addNote,
+  removeNote: removeNote,
+  listNote: listNote,
+  readNote: readNote,
+}
